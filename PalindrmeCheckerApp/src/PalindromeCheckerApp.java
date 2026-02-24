@@ -1,32 +1,53 @@
-import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
+import java.util.Scanner;
 
 public class PalindromeCheckerApp {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter any string to check for palindrome: ");
+        System.out.print("Enter a string to demonstrate FIFO vs LIFO: ");
         String inputString = scanner.nextLine();
-        // Optional: Preprocess the string to ignore case and spaces for a robust check
-        String cleanString = inputString.replaceAll("\\s+", "").toLowerCase();
-
-        boolean isPal = isPalindrome(cleanString);
-        if (isPal) {
-            System.out.println("The input String \"" + inputString + "\" is a palindrome.");
-        } else {
-            System.out.println("The input String \"" + inputString + "\" is not a palindrome.");
-        }
         scanner.close();
-    }
-    public static boolean isPalindrome(String str) {
-        Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < str.length(); i++) {
-            stack.push(str.charAt(i));
+        Queue<Character> charQueue = new LinkedList<>();
+        Stack<Character> charStack = new Stack<>();
+        for (char character : inputString.toCharArray()) {
+            charQueue.add(character);
+            charStack.push(character);
         }
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) != stack.pop()) {
-                return false;
+        System.out.println("\nOriginal Input String: " + inputString);
+        System.out.println("\n--- Queue (FIFO) Operations ---");
+        System.out.print("Dequeue order: ");
+        while (!charQueue.isEmpty()) {
+            System.out.print(charQueue.poll() + " ");
+        }
+        System.out.println("\nExplanation: Elements are removed in the order they were inserted (First-In, First-Out).");
+        System.out.println("\n--- Stack (LIFO) Operations ---");
+        System.out.print("Pop order: ");
+        while (!charStack.isEmpty()) {
+            System.out.print(charStack.pop() + " ");
+        }
+        System.out.println("\nExplanation: Elements are removed in the reverse order of insertion (Last-In, First-Out).");
+        System.out.println("\n--- Logical Comparison (Palindrome Check) ---");
+        boolean isPalindrome = true;
+        Queue<Character> queueForComparison = new LinkedList<>();
+        Stack<Character> stackForComparison = new Stack<>();
+        for (char character : inputString.toCharArray()) {
+            queueForComparison.add(character);
+            stackForComparison.push(character);
+        }
+        while (!queueForComparison.isEmpty()) {
+            if (queueForComparison.poll() != stackForComparison.pop()) {
+                isPalindrome = false;
+                break;
             }
         }
-        return true;
+
+        if (isPalindrome) {
+            System.out.println("Result: The input string is a palindrome.");
+        } else {
+            System.out.println("Result: The input string is not a palindrome.");
+        }
     }
 }
